@@ -44,13 +44,17 @@ RUN make install
 
 RUN addgroup -g 500 user \
     && adduser -D -h /home/user -G user -u 500 user
-USER user
 ENV HOME /home/user
 WORKDIR $HOME
+COPY muttrc .mutt
+RUN chown -R user: .mutt
+USER user
+
 RUN mkdir -p $HOME/.mutt/cache/headers $HOME/.mutt/cache/bodies \
 	&& touch $HOME/.mutt/certificates
 
 ENV LANG C.UTF-8
 ENV TERM xterm-256color
 
-
+COPY run.sh .
+CMD ["./run.sh"]
